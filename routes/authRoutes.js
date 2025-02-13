@@ -109,29 +109,4 @@ router.delete("/products/:id", authMiddleware, async (req, res) => {
   }
 });
 
-// search filter
-
-// router.get("/", async (req, res) => {
-//   try {
-//     const { category, search } = req.query;
-//     const filter = {};
-
-//     if (category && category !== "all") {
-//       filter.category = category;
-//     }
-
-//     if (search) {
-//       filter.$or = [
-//         { name: { $regex: search, $options: "i" } },
-//         { description: { $regex: search, $options: "i" } },
-//       ];
-//     }
-
-//     const products = await Product.find(filter);
-//     res.json(products);
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
-// });
-
 module.exports = router;

@@ -1,10 +1,8 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const dotenv = require("dotenv");
-const cors = require("cors");
-const cookieParser = require("cookie-parser"); // ✅ Import cookie-parser
-
-dotenv.config();
+import express from "express";
+import mongoose from "mongoose";
+import cors from "cors";
+import "dotenv/config";
+import cookieParser from "cookie-parser";
 
 const app = express();
 
@@ -13,7 +11,9 @@ app.use(cookieParser());
 app.use(
   cors({
     origin: [
+      "https://r.stripe.com/b",
       "http://localhost:3000",
+      "http://localhost:3001",
       "http://localhost:3002",
       "https://plant-app-omega.vercel.app",
       "https://plant-app-backend-5cp1.onrender.com",
@@ -33,9 +33,11 @@ mongoose
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error("MongoDB connection error:", err));
 
-const authRoutes = require("./routes/authRoutes");
+import authRoutes from "./routes/authRoutes.js";
+import paymentRoutes from "./routes/paymentRoutes.js";
 
 app.use("/api", authRoutes);
+app.use("/api", paymentRoutes); // Payment routes
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
