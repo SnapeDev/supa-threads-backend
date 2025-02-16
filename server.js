@@ -16,6 +16,7 @@ app.use(
       "http://localhost:3001",
       "https://supa-threads-backend.onrender.com",
       "https://supa-threads.vercel.app/",
+      "supa-threads-git-main-snapedevs-projects.vercel.app",
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
