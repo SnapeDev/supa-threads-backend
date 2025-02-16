@@ -12,8 +12,6 @@ app.use(
   cors({
     origin: [
       "https://r.stripe.com/b",
-      "http://localhost:3000",
-      "http://localhost:3001",
       "https://supa-threads-backend.onrender.com",
       "https://supa-threads.vercel.app/",
       "supa-threads-git-main-snapedevs-projects.vercel.app",
