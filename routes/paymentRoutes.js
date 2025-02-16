@@ -22,6 +22,7 @@ router.post("/create-payment-intent", async (req, res) => {
     // Create PaymentIntent with shipping information
     const paymentIntent = await stripe.paymentIntents.create({
       amount: totalPrice,
+
       currency: "gbp",
       automatic_payment_methods: { enabled: true },
       shipping: {
