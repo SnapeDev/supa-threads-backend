@@ -23,7 +23,7 @@ router.post("/logout", (req, res) => {
 });
 
 // /api/auth/me - Get the currently authenticated user's data
-router.get("/me", authMiddleware, async (req, res) => {
+router.get("/me", async (req, res) => {
   console.log("message");
   try {
     const user = await User.findById(req.user.id); // Get the user from DB using the decoded token
@@ -75,7 +75,7 @@ router.get("/products/:id", async (req, res) => {
 });
 
 // Add new product
-router.post("/products", authMiddleware, async (req, res) => {
+router.post("/products", async (req, res) => {
   try {
     const product = new Product(req.body);
     await product.save();
@@ -86,7 +86,7 @@ router.post("/products", authMiddleware, async (req, res) => {
 });
 
 // Update product
-router.put("/products/:id", authMiddleware, async (req, res) => {
+router.put("/products/:id", async (req, res) => {
   try {
     const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -99,7 +99,7 @@ router.put("/products/:id", authMiddleware, async (req, res) => {
 });
 
 // Delete product
-router.delete("/products/:id", authMiddleware, async (req, res) => {
+router.delete("/products/:id", async (req, res) => {
   try {
     const product = await Product.findByIdAndDelete(req.params.id);
     if (!product) return res.status(404).json({ message: "Product not found" });
