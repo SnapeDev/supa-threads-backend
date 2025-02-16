@@ -12,15 +12,17 @@ app.use(
   cors({
     origin: [
       "https://r.stripe.com/b",
-      "https://supa-threads-backend.onrender.com",
-      "https://supa-threads.vercel.app/",
-      "supa-threads-git-main-snapedevs-projects.vercel.app",
+      "https://supa-threads.vercel.app",
+      "https://supa-threads-git-main-snapedevs-projects.vercel.app",
     ],
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Include OPTIONS for preflight
     allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true, //Allow cookies (important!)
+    credentials: true, // Allow cookies
   })
 );
+
+// Handle preflight requests manually (important!)
+app.options("*", cors());
 
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
