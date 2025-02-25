@@ -22,6 +22,7 @@ router.post(
       );
 
       if (event.type === "checkout.session.completed") {
+        console.log("payment completed");
         const session = event.data.object;
 
         // Get customer email and order details
@@ -35,11 +36,13 @@ router.post(
           .join("\n")}`;
 
         // Send email
-        await sendEmail(
+        const data = await sendEmail(
           customerEmail,
           "Your Supa Threads Invoice",
           invoiceText
         );
+
+        console.log(data);
 
         console.log(`Invoice sent to ${customerEmail}`);
       }

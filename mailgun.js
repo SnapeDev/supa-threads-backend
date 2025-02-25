@@ -14,7 +14,7 @@ const mg = mailgun.client({
 export const sendEmail = async (to, subject, text) => {
   try {
     const messageData = {
-      from: `Supa Threads <no-reply@yourdomain.com>`,
+      from: `Supa Threads <no-reply@supathreads.com>`,
       to,
       subject,
       text,
