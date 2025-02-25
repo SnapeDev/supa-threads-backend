@@ -1,18 +1,15 @@
-import formData from "form-data";
-import Mailgun from "mailgun.js";
-import dotenv from "dotenv";
-
-dotenv.config();
-
-const mailgun = new Mailgun(formData);
-const mg = mailgun.client({
-  username: "api",
-  key: process.env.MAILGUN_API_KEY, // Use API Key from Mailgun
-  url: "https://api.mailgun.net", // Default Mailgun API URL
-});
-
 export const sendEmail = async (to, subject, text) => {
   try {
+    console.log(`📤 Attempting to send email to: ${to}`);
+    console.log(`📧 Subject: ${subject}`);
+    console.log(`📝 Text: ${text}`);
+    console.log(
+      `🔑 Mailgun API Key: ${
+        process.env.MAILGUN_API_KEY ? "Exists ✅" : "Not Found ❌"
+      }`
+    );
+    console.log(`🌍 Mailgun Domain: ${process.env.MAILGUN_DOMAIN}`);
+
     const messageData = {
       from: `Supa Threads <no-reply@supathreads.com>`,
       to,
@@ -24,10 +21,11 @@ export const sendEmail = async (to, subject, text) => {
       process.env.MAILGUN_DOMAIN,
       messageData
     );
-    console.log("Email sent:", response);
+
+    console.log("✅ Email sent successfully:", response);
     return response;
   } catch (error) {
-    console.error("Error sending email:", error);
+    console.error("❌ Error sending email:", error.response?.body || error);
     throw error;
   }
 };
