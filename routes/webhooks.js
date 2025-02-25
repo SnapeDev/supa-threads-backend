@@ -1,3 +1,4 @@
+// webhooks.js
 import express from "express";
 import Stripe from "stripe";
 import { sendEmail } from "../mailgun.js";
@@ -30,7 +31,7 @@ router.post(
         const orderId = session.id;
         const items = JSON.parse(session.metadata.items); // Store item details in metadata during checkout
 
-        // Generate an invoice as text (you can also attach PDFs)
+        // Generate an invoice as text
         const invoiceText = `Thank you for your purchase!\n\nOrder ID: ${orderId}\n\nItems:\n${items
           .map((item) => `- ${item.name} x ${item.quantity} ($${item.price})`)
           .join("\n")}`;
@@ -43,7 +44,6 @@ router.post(
         );
 
         console.log(data);
-
         console.log(`Invoice sent to ${customerEmail}`);
       }
 
