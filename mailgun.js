@@ -1,31 +1,29 @@
-export const sendEmail = async (to, subject, text) => {
+import FormData from "form-data"; // form-data v4.0.1
+import Mailgun from "mailgun.js"; // mailgun.js v11.1.0
+
+async function sendSimpleMessage() {
+  const mailgun = new Mailgun(FormData);
+  const mg = mailgun.client({
+    username: "api",
+    key: process.env.MAILGUN_API_KEY || "API_KEY", // Check this API key!
+    url: "https://api.eu.mailgun.net/v3", // or use https://api.eu.mailgun.net/v3 for EU domains
+  });
+
   try {
-    console.log(`📤 Attempting to send email to: ${to}`);
-    console.log(`📧 Subject: ${subject}`);
-    console.log(`📝 Text: ${text}`);
-    console.log(
-      `🔑 Mailgun API Key: ${
-        process.env.MAILGUN_API_KEY ? "Exists ✅" : "Not Found ❌"
-      }`
-    );
-    console.log(`🌍 Mailgun Domain: ${process.env.MAILGUN_DOMAIN}`);
+    const data = await mg.messages.create("snapedev.com", {
+      from: "Mailgun Sandbox <postmaster@snapedev.com>", // Verify this address is valid
+      to: ["Jack Snape <jacksnapephotography@outlook.com>"],
+      subject: "Hello Jack Snape",
+      text: "Congratulations Jack Snape, you just sent an email with Mailgun! You are truly awesome!",
+    });
 
-    const messageData = {
-      from: `Supa Threads <no-reply@supathreads.com>`,
-      to,
-      subject,
-      text,
-    };
-
-    const response = await mg.messages.create(
-      process.env.MAILGUN_DOMAIN,
-      messageData
-    );
-
-    console.log("✅ Email sent successfully:", response);
-    return response;
+    console.log(data); // logs response data
   } catch (error) {
-    console.error("❌ Error sending email:", error.response?.body || error);
-    throw error;
+    console.error("Error sending email:", error);
+    if (error.response) {
+      console.log("Response:", error.response); // More detailed error response
+    }
   }
-};
+}
+
+sendSimpleMessage();
