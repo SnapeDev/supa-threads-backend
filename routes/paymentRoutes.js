@@ -26,14 +26,13 @@ router.post("/create-payment-intent", async (req, res) => {
       automatic_payment_methods: { enabled: true },
       shipping: {
         name: shippingInfo.name,
+        email: shippingInfo.email,
         address: {
           line1: shippingInfo.address,
           city: shippingInfo.city,
           postal_code: shippingInfo.postalCode,
           country: shippingInfo.country,
         },
-        // Add email to shipping info
-        email: shippingInfo.email,
       },
     });
 
