@@ -19,10 +19,9 @@ router.post("/create-payment-intent", async (req, res) => {
       throw new Error("Invalid request data");
     }
 
-    // Create PaymentIntent with shipping information
+    // Create PaymentIntent with shipping information, including email
     const paymentIntent = await stripe.paymentIntents.create({
       amount: totalPrice,
-
       currency: "gbp",
       automatic_payment_methods: { enabled: true },
       shipping: {
@@ -33,6 +32,8 @@ router.post("/create-payment-intent", async (req, res) => {
           postal_code: shippingInfo.postalCode,
           country: shippingInfo.country,
         },
+        // Add email to shipping info
+        email: shippingInfo.email,
       },
     });
 
