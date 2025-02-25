@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import cors from "cors";
 import "dotenv/config";
 import cookieParser from "cookie-parser";
-import emailRoutes from "./routes/email.js";
+
 import webhookRoutes from "./routes/webhooks.js";
 
 const app = express();
