@@ -24,9 +24,9 @@ router.post("/create-payment-intent", async (req, res) => {
       amount: totalPrice,
       currency: "gbp",
       automatic_payment_methods: { enabled: true },
+      receipt_email: shippingInfo.email,
       shipping: {
         name: shippingInfo.name,
-        email: shippingInfo.email,
         address: {
           line1: shippingInfo.address,
           city: shippingInfo.city,
