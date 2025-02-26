@@ -1,26 +1,37 @@
-import FormData from "form-data";
-import Mailgun from "mailgun.js";
+import axios from "axios";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 export async function sendEmail(to, subject, text) {
-  const mailgun = new Mailgun(FormData);
-  const mg = mailgun.client({
-    username: "api",
-    key: process.env.MAILGUN_API_KEY || "API_KEY",
-    url: "https://api.eu.mailgun.net/v3",
-  });
+  const apiKey = process.env.MAILGUN_API_KEY;
+  const domain = "snapedev.com";
+  const url = `https://api.eu.mailgun.net/v3/${domain}/messages`;
+
+  const data = new URLSearchParams();
+  data.append("from", "Supa Threads <postmaster@snapedev.com>");
+  data.append("to", to);
+  data.append("subject", subject);
+  data.append("text", text);
 
   try {
-    const data = await mg.messages.create("snapedev.com", {
-      from: "Supa Threads <postmaster@snapedev.com>",
-      to: "jacksnapephotography@outlook.com", // customer email
-      subject: subject, // email subject
-      text: text, // email body
+    const response = await axios.post(url, data, {
+      auth: {
+        username: "api",
+        password: apiKey,
+      },
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
     });
 
-    console.log(data);
-    return data;
+    console.log("Email sent successfully:", response.data);
+    return response.data;
   } catch (error) {
-    console.error("Error sending email:", error);
-    throw error; // Propagate the error for handling in webhook
+    console.error(
+      "Error sending email:",
+      error.response?.data || error.message
+    );
+    throw error;
   }
 }
