@@ -36,7 +36,7 @@ router.post("/create-payment-intent", async (req, res) => {
       },
     });
 
-    asendEmail(shippingInfo.email, "testing payment", "this is a test");
+    sendEmail(shippingInfo.email, "testing payment", "this is a test");
 
     console.log("Payment Intent:", paymentIntent); // Debugging
 
