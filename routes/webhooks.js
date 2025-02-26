@@ -23,6 +23,8 @@ router.post(
         process.env.STRIPE_WEBHOOK_SECRET
       );
 
+      console.log("Received Stripe event:", event.type);
+
       // Handle the checkout.session.completed event
       if (event.type === "checkout.session.completed") {
         console.log("Payment completed");
@@ -47,15 +49,22 @@ router.post(
           .map((item) => `- ${item.name} x ${item.quantity} ($${item.price})`)
           .join("\n")}`;
 
-        // Send email
-        const data = await sendEmail(
-          customerEmail,
-          "Your Supa Threads Invoice",
-          invoiceText
-        );
+        console.log("Invoice Text:", invoiceText);
 
-        console.log("Mailgun response:", data);
-        console.log(`Invoice sent to ${customerEmail}`);
+        // Send email
+        try {
+          const data = await sendEmail(
+            customerEmail,
+            "Your Supa Threads Invoice",
+            invoiceText
+          );
+          console.log("Mailgun response:", data);
+          console.log(`Invoice sent to ${customerEmail}`);
+        } catch (emailError) {
+          console.error("Error sending email:", emailError.message);
+          res.status(500).send(`Error sending email: ${emailError.message}`);
+          return;
+        }
       }
 
       res.status(200).send();
