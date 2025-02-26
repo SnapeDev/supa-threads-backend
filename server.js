@@ -39,7 +39,7 @@ import paymentRoutes from "./routes/paymentRoutes.js";
 
 app.use("/api", authRoutes);
 app.use("/api", paymentRoutes); // Payment routes
-app.use("/api/stripe-webhook", webhookRoutes);
+app.use("/api", webhookRoutes);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
