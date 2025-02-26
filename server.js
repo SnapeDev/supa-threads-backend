@@ -13,6 +13,7 @@ app.use(cookieParser());
 app.use(
   cors({
     origin: [
+      "http://localhost:3001",
       "https://r.stripe.com/b",
       "https://supa-threads.vercel.app",
       "https://supa-threads-git-main-snapedevs-projects.vercel.app",
