@@ -10,9 +10,9 @@ export async function sendEmail(to, subject, text) {
   });
 
   try {
-    const data = await mg.messages.create("snapedev.com", {
+    const data = await mg.messages.create("email.snapedev.com", {
       from: "Supa Threads <postmaster@snapedev.com>",
-      to: [to], // customer email
+      to: to, // customer email
       subject: subject, // email subject
       text: text, // email body
     });
