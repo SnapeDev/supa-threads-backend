@@ -27,6 +27,8 @@ app.use(
 // Handle preflight requests manually (important!)
 app.options("*", cors());
 
+app.use("/api", webhookRoutes);
+
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
@@ -40,7 +42,7 @@ import paymentRoutes from "./routes/paymentRoutes.js";
 
 app.use("/api", authRoutes);
 app.use("/api", paymentRoutes); // Payment routes
-app.use("/api", webhookRoutes);
+// app.use("/api", webhookRoutes);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
