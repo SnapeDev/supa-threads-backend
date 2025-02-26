@@ -27,7 +27,7 @@ app.use(
 // Handle preflight requests manually (important!)
 app.options("*", cors());
 
-app.use("/api", webhookRoutes);
+app.use("/api", express.raw({ type: "application/json" }), webhookRoutes);
 
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
