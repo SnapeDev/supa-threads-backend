@@ -23,8 +23,7 @@ router.post("/create-payment-intent", async (req, res) => {
     const paymentIntent = await stripe.paymentIntents.create({
       amount: totalPrice,
       currency: "gbp",
-      // Use payment_method_types explicitly and remove automatic_payment_methods
-      payment_method_types: ["card", "link"], // Enable Link payment method
+      automatic_payment_methods: { enabled: true },
       receipt_email: shippingInfo.email,
       shipping: {
         name: shippingInfo.name,
