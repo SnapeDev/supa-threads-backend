@@ -1,57 +1,3 @@
-// // webhooks.js
-// import express from "express";
-// import Stripe from "stripe";
-// import { sendEmail } from "../mailgun.js";
-// import dotenv from "dotenv";
-
-// dotenv.config();
-
-// const router = express.Router();
-// const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-
-// router.post(
-//   "/stripe-webhook",
-//   express.raw({ type: "application/json" }),
-//   async (req, res) => {
-//     const sig = req.headers["stripe-signature"];
-
-//     try {
-//       const event = stripe.webhooks.constructEvent(
-//         req.body,
-//         sig,
-//         process.env.STRIPE_WEBHOOK_SECRET
-//       );
-
-//       if (event.type === "checkout.session.completed") {
-//         console.log("Payment completed");
-
-//         const session = event.data.object;
-//         const customerEmail = session.customer_details.email;
-//         const orderId = session.id;
-//         const items = JSON.parse(session.metadata.items);
-
-//         const invoiceText = `Thank you for your purchase!\n\nOrder ID: ${orderId}\n\nItems:\n${items
-//           .map((item) => `- ${item.name} x ${item.quantity} ($${item.price})`)
-//           .join("\n")}`;
-
-//         await sendEmail(
-//           customerEmail,
-//           "Your Supa Threads Invoice",
-//           invoiceText
-//         );
-//         console.log(`Invoice sent to ${customerEmail}`);
-//       }
-
-//       res.status(200).send();
-//     } catch (error) {
-//       console.error("Webhook error:", error);
-//       res.status(400).send(`Webhook Error: ${error.message}`);
-//     }
-//   }
-// );
-
-// export default router;
-
 import express from "express";
 import Stripe from "stripe";
 import { sendEmail } from "../mailgun.js";
@@ -70,23 +16,34 @@ router.post(
     const rawBody = req.body; // Use req.body directly (raw)
 
     try {
+      // Construct the Stripe event
       const event = stripe.webhooks.constructEvent(
         rawBody,
         sig,
         process.env.STRIPE_WEBHOOK_SECRET
       );
 
+      // Handle the checkout.session.completed event
       if (event.type === "checkout.session.completed") {
         console.log("Payment completed");
         const session = event.data.object;
 
-        // Get customer email and order details
+        // Validate customer email
+        if (!session.customer_details || !session.customer_details.email) {
+          throw new Error("Customer email is missing in the session.");
+        }
         const customerEmail = session.customer_details.email;
-        const orderId = session.id;
-        const items = JSON.parse(session.metadata.items); // Ensure metadata is set
+
+        // Validate metadata items
+        if (!session.metadata || !session.metadata.items) {
+          throw new Error("Metadata items are missing in the session.");
+        }
+        const items = JSON.parse(session.metadata.items);
 
         // Generate an invoice as text
-        const invoiceText = `Thank you for your purchase!\n\nOrder ID: ${orderId}\n\nItems:\n${items
+        const invoiceText = `Thank you for your purchase!\n\nOrder ID: ${
+          session.id
+        }\n\nItems:\n${items
           .map((item) => `- ${item.name} x ${item.quantity} ($${item.price})`)
           .join("\n")}`;
 
@@ -97,15 +54,17 @@ router.post(
           invoiceText
         );
 
-        console.log(data);
+        console.log("Mailgun response:", data);
         console.log(`Invoice sent to ${customerEmail}`);
       }
 
       res.status(200).send();
     } catch (error) {
-      console.error("Webhook error:", error);
+      console.error("Webhook error:", error.message);
+      console.error("Stack trace:", error.stack);
       res.status(400).send(`Webhook Error: ${error.message}`);
     }
   }
 );
+
 export default router;
