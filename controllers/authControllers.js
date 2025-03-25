@@ -4,7 +4,7 @@ const User = require("../models/User.js");
 
 const registerUser = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { username, email, password } = req.body;
 
     // Check if the user already exists
     const existingUser = await User.findOne({ email });
@@ -88,29 +88,29 @@ const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Validate input
+    // Taking in user input from request body and checking if user exists
     if (!email || !password) {
       return res.status(400).json({ message: "Both fields are required" });
     }
 
-    // Find user by email
+    // Find if user exists by email
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
-    // Check password
+    // Check users password which is hashed in the database
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
-    // Generate JWT token
+    // Generate JWT token with user ID and secret
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "12h",
     });
 
-    // Set token in HTTP-only cookie
+    // Set token in HTTP-only cookie for security, HTTP-only cookies can't be accessed by malicious JavaScript code. (could come from a package download)
     res.cookie("token", token, {
       httpOnly: true, // Prevent access via JavaScript
       secure: process.env.NODE_ENV === "production", // Use secure cookies in production
