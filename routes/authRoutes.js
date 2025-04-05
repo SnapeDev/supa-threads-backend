@@ -23,7 +23,7 @@ router.post("/logout", (req, res) => {
 });
 
 // /api/auth/me - Get the currently authenticated user's data
-router.get("/me", async (req, res) => {
+router.get("/me", authMiddleware, async (req, res) => {
   console.log("message");
   try {
     const user = await User.findById(req.user.id); // Get the user from DB using the decoded token
